@@ -11,7 +11,7 @@ CONANEXILES_Game_RconPlugin_RconMaxKarma=60
 
 RUN dpkg --add-architecture i386 && \
     apt-get update && \
-    apt-get install -y software-properties-common python3-software-properties wget unzip xvfb supervisor crudini python3-pip tzdata rsync && \
+    apt-get install -y software-properties-common python3-software-properties wget unzip xvfb supervisor crudini python3-pip tzdata rsync sqlite3 && \
     apt-get install -y --install-recommends wine64 winbind && \
     pip3 install python-valve && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \

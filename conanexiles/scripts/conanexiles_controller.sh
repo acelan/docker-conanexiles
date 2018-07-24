@@ -40,6 +40,8 @@ function start_server() {
         notfier_error "The server is already running. I don't want to start it twice."
         return
     else
+        notifier_info "Cleaning up game.db."
+        sqlite3 /conanexiles/ConanSandbox/Saved/game.db "VACUUM;REINDEX;ANALYZE;pragma integrity_check"
         supervisorctl status conanexilesServer | grep RUNNING > /dev/null
         [[ $? != 0 ]] && supervisorctl start conanexilesServer
     fi
