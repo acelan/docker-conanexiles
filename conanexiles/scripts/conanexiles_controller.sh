@@ -113,7 +113,7 @@ function do_update() {
     if [[ $1 == 1 ]];then
         update_server
     else
-        start_shutdown_timer 15
+        start_shutdown_timer 10
         stop_server
         # Give other instances time to shutdown
         sleep 300
@@ -157,7 +157,9 @@ start_master_loop() {
         ab=$(get_available_build)
         ib=$(get_installed_build)
 
-        if [[ $ab != $ib ]];then
+	if [[ -z $ab ]];then
+            echo "Warning: Available build string is NULL."
+        elif [[ $ab != $ib ]];then
             notifier_info "New build available. Updating $ib -> $ab"
             do_update 0
         fi
