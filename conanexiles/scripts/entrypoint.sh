@@ -275,6 +275,22 @@ function override_config() {
     fi
 }
 
+function generate_modscript() {
+    if [[ ! -f /mod_list.txt ]]; then
+	    return
+    fi
+
+    echo """
+@sSteamCmdForcePlatformType windows
+login anonymous
+force_install_dir /conanexiles
+""" > /modscript.txt
+    while read line; do
+        echo "workshop_download_item 440900 $line" >> /modscript.txt
+    done < /mod_list.txt
+    echo "quit" >> /modscript.txt
+}
+
 init_master_server_instance
 init_supervisor_conanexiles_cmd
 
@@ -287,6 +303,8 @@ steamcmd_setup
 setup_server_config_first_time
 
 override_config
+
+generate_modscript
 
 # start Xvfb
 xvfb_display=0

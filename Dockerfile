@@ -25,6 +25,7 @@ RUN ln -snf /usr/share/zoneinfo/Europe/Vienna /etc/localtime && echo $TIMEZONE >
 ADD conanexiles/scripts/entrypoint.sh /entrypoint.sh
 ADD conanexiles/installer/steamcmd_setup.sh /usr/bin/steamcmd_setup
 ADD conanexiles/installer/install.txt /install.txt
+ADD conanexiles/installer/mod_list.txt /mod_list.txt
 ADD conanexiles/scripts/conanexiles_controller.sh /usr/bin/conanexiles_controller
 
 ADD conanexiles/configs/supervisord/supervisord.conf /etc/supervisor/supervisord.conf
