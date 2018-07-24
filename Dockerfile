@@ -11,7 +11,7 @@ CONANEXILES_Game_RconPlugin_RconMaxKarma=60
 
 RUN dpkg --add-architecture i386 && \
     apt-get update && \
-    apt-get install -y software-properties-common python3-software-properties wget unzip xvfb supervisor crudini python3-pip tzdata && \
+    apt-get install -y software-properties-common python3-software-properties wget unzip xvfb supervisor crudini python3-pip tzdata rsync && \
     apt-get install -y --install-recommends wine64 winbind && \
     pip3 install python-valve && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
@@ -22,6 +22,7 @@ RUN ln -snf /usr/share/zoneinfo/Asia/Taipei /etc/localtime && echo $TIMEZONE > /
 ADD conanexiles/scripts/entrypoint.sh /entrypoint.sh
 ADD conanexiles/installer/steamcmd_setup.sh /usr/bin/steamcmd_setup
 ADD conanexiles/installer/install.txt /install.txt
+ADD conanexiles/installer/mod_list.txt /mod_list.txt
 ADD conanexiles/scripts/conanexiles_controller.sh /usr/bin/conanexiles_controller
 
 ADD conanexiles/configs/supervisord/supervisord.conf /etc/supervisor/supervisord.conf

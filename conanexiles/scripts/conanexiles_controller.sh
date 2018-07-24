@@ -157,11 +157,28 @@ start_master_loop() {
         ab=$(get_available_build)
         ib=$(get_installed_build)
 
-	if [[ -z $ab ]];then
+        if [[ -z $ab ]];then
             echo "Warning: Available build string is NULL."
         elif [[ $ab != $ib ]];then
             notifier_info "New build available. Updating $ib -> $ab"
             do_update 0
+        fi
+
+        # check if mods are updated
+        if [[ -f /modscript.txt ]]; then
+            $(/steamcmd/steamcmd.sh +runscript /modscript.txt)
+            if [[ ! -f /conanexiles/steamapps/workshop/content/440900/modlist.txt ]]; then
+                echo > /conanexiles/steamapps/workshop/content/440900/modlist.txt
+                for i in `cat /mod_list.txt` ; do
+                    filename=`basename $(ls /conanexiles/steamapps/workshop/content/440900/$i/*.pak)`;
+                    echo "Z:/conanexiles/ConanSandbox/Mods/$i/$filename" >> /conanexiles/steamapps/workshop/content/440900/modlist.txt;
+                done
+            fi
+            bytes=`rsync -avr --stats /conanexiles/steamapps/workshop/content/440900/* /conanexiles/ConanSandbox/Mods | grep "Total transferred file size:" | sed 's/Total transferred file size: \(.*\) bytes/\1/'`
+            if [[ $bytes != "0" ]];then
+                notifier_info "Mods have been updated: $bytes bytes"
+                do_update 0
+            fi
         fi
 
         start_server
