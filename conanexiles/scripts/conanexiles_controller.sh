@@ -116,7 +116,7 @@ function do_update() {
         start_shutdown_timer 10
         stop_server
         # Give other instances time to shutdown
-        sleep 300
+        sleep 30
         backup_server
         update_server
     fi
