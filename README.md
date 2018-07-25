@@ -156,6 +156,8 @@ services:
       - "CONANEXILES_Game_RconPlugin_RconPassword=MyPassword"
       - "CONANEXILES_Game_RconPlugin_RconPort=25575"
       - "CONANEXILES_Game_RconPlugin_RconMaxKarma=60"
+      - "CONANEXILES_Game_DiscordPlugin_Token=[DISCORD TOKEN]"
+      - "CONANEXILES_Game_DiscordPlugin_Channel=[DISCORD CHANNEL ID]"
 
     ports:
         - 7777:7777/udp

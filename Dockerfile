@@ -11,7 +11,7 @@ CONANEXILES_Game_RconPlugin_RconMaxKarma=60
 
 RUN dpkg --add-architecture i386 && \
     apt-get update && \
-    apt-get install -y software-properties-common python3-software-properties wget unzip xvfb supervisor crudini python3-pip tzdata rsync sqlite3 && \
+    apt-get install -y software-properties-common python3-software-properties wget unzip xvfb supervisor crudini tzdata rsync python3-pip python3-feedparser sqlite3 && \
     apt-get install -y --install-recommends wine64 winbind && \
     pip3 install python-valve && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
@@ -24,6 +24,7 @@ ADD conanexiles/installer/steamcmd_setup.sh /usr/bin/steamcmd_setup
 ADD conanexiles/installer/install.txt /install.txt
 ADD conanexiles/installer/mod_list.txt /mod_list.txt
 ADD conanexiles/scripts/conanexiles_controller.sh /usr/bin/conanexiles_controller
+ADD conanexiles/scripts/discord_broadcast.py /usr/bin/discord_broadcast
 
 ADD conanexiles/configs/supervisord/supervisord.conf /etc/supervisor/supervisord.conf
 ADD conanexiles/configs/supervisord/conanexiles.conf /etc/supervisor/conf.d/conanexiles.conf
@@ -36,7 +37,8 @@ ADD conanexiles/lib/notifier.sh /var/lib/conanexiles/notifier.sh
 
 ADD conanexiles/rcon/rconcli.py /usr/bin/rconcli
 
-RUN chmod +x /usr/bin/steamcmd_setup /usr/bin/conanexiles_controller /entrypoint.sh /usr/bin/redi.sh /usr/bin/rconcli
+RUN chmod +x /usr/bin/steamcmd_setup /usr/bin/conanexiles_controller /entrypoint.sh /usr/bin/redi.sh /usr/bin/rconcli /usr/bin/discord_broadcast
+RUN python3 -m pip install -U discord.py
 
 EXPOSE 7777/udp 27015/udp 27016/udp 37015/udp 37016/udp
 
