@@ -103,7 +103,7 @@ start_shutdown_timer() {
         if [[ ${CONANEXILES_Game_RconPlugin_RconEnabled} == 1 ]]; then
             /usr/bin/rconcli broadcast --type shutdown --value $((_t_val - _i))
 	    # notify discord bot too
-            if [[ ! -z ${CONANEXILES_Game_DiscordPlugin_Token} ]]; then
+            if [[ ${CONANEXILES_Game_DiscordPlugin_Broadcast_Enabled} == 1]]; then
 		/usr/bin/discord_broadcast "Server is shutting down in $((_t_val - _i)) minutes."
             fi
         fi
@@ -167,7 +167,7 @@ start_master_loop() {
             echo "Warning: Available build string is NULL."
         elif [[ $ab != $ib ]];then
             notifier_info "New build available. Updating $ib -> $ab"
-            if [[ ! -z ${CONANEXILES_Game_DiscordPlugin_Token} ]]; then
+            if [[ ${CONANEXILES_Game_DiscordPlugin_Broadcast_Enabled} == 1 ]]; then
                 /usr/bin/discord_broadcast "New build available. Updating $ib -> $ab"
             fi
             do_update 0
@@ -186,7 +186,7 @@ start_master_loop() {
             bytes=`rsync -avr --stats /conanexiles/steamapps/workshop/content/440900/* /conanexiles/ConanSandbox/Mods | grep "Total transferred file size:" | sed 's/Total transferred file size: \(.*\) bytes/\1/'`
             if [[ $bytes != "0" ]];then
                 notifier_info "Mods have been updated: $bytes bytes"
-                if [[ ! -z ${CONANEXILES_Game_DiscordPlugin_Token} ]]; then
+                if [[ ${CONANEXILES_Game_DiscordPlugin_Broadcast_Enabled} == 1 ]]; then
                     /usr/bin/discord_broadcast "Mods have been updated: $bytes bytes"
                 fi
                 do_update 0
