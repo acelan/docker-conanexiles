@@ -103,7 +103,7 @@ start_shutdown_timer() {
         if [[ ${CONANEXILES_Game_RconPlugin_RconEnabled} == 1 ]]; then
             /usr/bin/rconcli broadcast --type shutdown --value $((_t_val - _i))
 	    # notify discord bot too
-            if [[ ${CONANEXILES_Game_DiscordPlugin_Broadcast_Enabled} == 1]]; then
+            if [[ ${CONANEXILES_Game_DiscordPlugin_Broadcast_Enabled} == 1 ]]; then
 		/usr/bin/discord_broadcast "Server is shutting down in $((_t_val - _i)) minutes."
             fi
         fi
