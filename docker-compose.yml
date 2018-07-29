@@ -14,6 +14,7 @@ services:
       - "CONANEXILES_Game_RconPlugin_RconPort=25575"
       - "CONANEXILES_Game_RconPlugin_RconMaxKarma=60"
       - "CONANEXILES_Game_DiscordPlugin_Broadcast_Enabled=1"
+      - "CONANEXILES_Game_DiscordPlugin_Chat_Enabled=1"
       - "CONANEXILES_Game_DiscordPlugin_Token=[DISCORD TOKEN]"
       - "CONANEXILES_Game_DiscordPlugin_Channel=[DISCORD CHANNEL ID]"
     ports:

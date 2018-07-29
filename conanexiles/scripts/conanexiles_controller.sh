@@ -44,6 +44,10 @@ function start_server() {
         sqlite3 /conanexiles/ConanSandbox/Saved/game.db "VACUUM;REINDEX;ANALYZE;pragma integrity_check"
         supervisorctl status conanexilesServer | grep RUNNING > /dev/null
         [[ $? != 0 ]] && supervisorctl start conanexilesServer
+	# restart chat bot to read the new log
+        if [[ ${CONANEXILES_Game_DiscordPlugin_Chat_Enabled} == 1 ]]; then
+            supervisorctl restart conanexilesChat
+        fi
     fi
 }
 
