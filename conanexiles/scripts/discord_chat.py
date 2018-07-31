@@ -110,7 +110,7 @@ async def on_message(message):
 			return;
 		rcon_send_msg(message.author.name + ": " + message.content)
 
-if os.getenv("CONANEXILES_Game_DiscordPlugin_Chat_Enabled") != 1:
+if os.getenv("CONANEXILES_Game_DiscordPlugin_Chat_Enabled") != "1":
 	sys.exit(0)
 
 client.loop.create_task(read_game_chat())
