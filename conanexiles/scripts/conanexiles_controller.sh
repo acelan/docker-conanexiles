@@ -48,6 +48,9 @@ function start_server() {
         if [[ ${CONANEXILES_Game_DiscordPlugin_Chat_Enabled} == 1 ]]; then
             supervisorctl restart conanexilesChat
         fi
+        if [[ ${CONANEXILES_Game_DiscordPlugin_Broadcast_Enabled} == 1 ]]; then
+            /usr/bin/discord_broadcast "Server is starting..."
+        fi
     fi
 }
 
@@ -216,9 +219,6 @@ start_slave_loop() {
         elif [[ "`redis_cmd_proxy redis_get_update_running`" == 1 ]]; then
             [[ `check_server_running` == 1 ]] && \
                 start_server
-                if [[ ${CONANEXILES_Game_DiscordPlugin_Broadcast_Enabled} == 1 ]]; then
-                    /usr/bin/discord_broadcast "Server is starting..."
-                fi
         fi
         sleep 10
     done
