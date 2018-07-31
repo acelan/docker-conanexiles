@@ -4,6 +4,9 @@
 import discord
 import asyncio
 import sys
+import random
+import feedparser
+import ssl
 import re
 import valve.rcon
 import os
@@ -21,6 +24,7 @@ password = os.getenv("CONANEXILES_Game_RconPlugin_RconPassword")
 
 client = discord.Client()
 
+feedparser.PREFERRED_XML_PARSERS.remove('drv_libxml2')
 zh_pattern = re.compile(u'[\u4e00-\u9fa5]+')
 
 def rcon_send_msg(msg):
