@@ -45,12 +45,26 @@ async def read_game_chat():
 				chatstr = re.sub(r' said', '', re.sub(r'^.*Character ', '', line))
 				yield chatstr
 			elif "Join request:" in line:
-				pattern = re.compile(r"dw_user_id=(\d+)")
-				str = pattern.match(line.split('?')[5])[1]
-				cmd = 'sqlite3 -csv /conanexiles/ConanSandbox/Saved/game.db "select * from characters where playerId=%s;"' % str
-				stdoutdata = subprocess.getoutput(cmd)
-				username = stdoutdata.split(',')[2]
-				yield "Join succeeded: Player %s joined the game." % username
+				pattern = re.compile(r"dw_user_id=(\S+)")
+				try:
+					joinstr = ""
+					if "bIsFromInvite" in line:
+						joinstr = pattern.match(line.split('?')[6])[1]
+					else:
+						joinstr = pattern.match(line.split('?')[5])[1]
+					cmd = 'sqlite3 -csv /conanexiles/ConanSandbox/Saved/game.db "select * from characters where playerId=%s;"' % joinstr
+					stdoutdata = subprocess.getoutput(cmd)
+					try:
+						username = stdoutdata.split(',')[2]
+						yield "Join succeeded: Player %s joined the game." % username
+					except IndexError:
+						print("Join request Error: %s - %s" % (line, stdoutdata))
+					except:
+						print("Join request Error: %s - %s" % (line, stdoutdata))
+				except IndexError:
+					print("Join request Error: %s" % line)
+				except:
+					print("Join request Error: %s" % line)
 
 	await client.wait_until_ready()
 
