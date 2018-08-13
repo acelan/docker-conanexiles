@@ -42,8 +42,8 @@ async def read_game_chat():
 				await asyncio.sleep(1)
 				continue
 			if "ChatWindow" in line:
-				str = re.sub(r' said', '', re.sub(r'^.*Character ', '', line))
-				yield str
+				chatstr = re.sub(r' said', '', re.sub(r'^.*Character ', '', line))
+				yield chatstr
 			elif "Join request:" in line:
 				pattern = re.compile(r"dw_user_id=(\d+)")
 				str = pattern.match(line.split('?')[5])[1]
