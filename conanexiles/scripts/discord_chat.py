@@ -86,7 +86,7 @@ async def on_message(message):
 			desc = item['description']
 			desc = re.sub('<br />','\n', desc)
 			desc = re.sub('<[^<]+?>', '', desc)
-			embed = discord.Embed(title=title, url=url, description=desc, color=0x00ff00)
+			embed = discord.Embed(title=title, url=url, description=desc[0:2000], color=0x00ff00)
 			await client.send_message(message.channel, embed=embed)
 	elif message.content.startswith('!status'):
 		stdoutdata = subprocess.getoutput("tac /conanexiles/ConanSandbox/Saved/Logs/ConanSandbox.log | grep -m 1 'LogServerStats:'")
