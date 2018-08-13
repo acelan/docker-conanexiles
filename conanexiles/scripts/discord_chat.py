@@ -65,6 +65,11 @@ async def read_game_chat():
 					print("Join request Error: %s" % line)
 				except:
 					print("Join request Error: %s" % line)
+			elif "Allocator Stats for binned2:" in line:
+				subprocess.call(['/usr/bin/discord_broadcast', '"Server crash, restarting now..."'])
+				subprocess.call(['supervisorctl', 'restart', 'conanexilesServer'])
+				subprocess.call(['supervisorctl', 'restart', 'conanexilesChat'])
+				sys.exit(0)
 
 	await client.wait_until_ready()
 
