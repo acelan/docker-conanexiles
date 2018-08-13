@@ -115,8 +115,38 @@ async def on_message(message):
 			return
 
 		pattern = re.compile(r"players=(\d+)&\S+&uptime=(\d+)&memory=\d+:\d+:\d+:(\d+)&cpu_time=(\d+\.\d*)")
-		data = pattern.match(stdoutdata.split(' ')[3].split('?')[1])
-		await client.send_message(message.channel, "```Server report:\n   Players: %s\n   Uptime: %s\n   Memory Usage: %sGB\n   CPU Loading: %s```" % (data[1], datetime.timedelta(seconds=int(data[2])), '{:.2f}'.format(int(data[3])/(1024*1024*1024)), '{:.2f}'.format(float(data[4]))))
+		try:
+			data = pattern.match(stdoutdata.split('report')[1].split('?')[1])
+			status_str = "Server report:\n   Players: %s\n   Uptime: %s\n   Memory Usage: %sGB\n   CPU Loading: %s" % (data[1], datetime.timedelta(seconds=int(data[2])), '{:.2f}'.format(int(data[3])/(1024*1024*1024)), '{:.2f}'.format(float(data[4])))
+
+			# show players
+			online_player = ""
+			cmd = 'sqlite3 -csv /conanexiles/ConanSandbox/Saved/game.db "select * from characters,account where account.online = 1 and account.user = characters.playerId;"'
+			stdoutdata = subprocess.getoutput(cmd)
+			# Status Error: 76561198070232842,35839,"喬巧",50,3,39590,1,"",1533895072,"",76561198070232842,1
+			if stdoutdata:
+				online_player = "\nOnline Players:\n"
+				for line in stdoutdata.split('\n'):
+					username = line.split(',')[2]
+					online_player += "   %s\n" % username
+
+			await client.send_message(message.channel, "```%s%s```" % (status_str, online_player))
+		except IndexError:
+			print("Status Error: %s" % stdoutdata)
+		except:
+			print("Status Error: %s" % stdoutdata)
+	elif message.content.startswith('!player'):
+		cmd = 'sqlite3 -csv /conanexiles/ConanSandbox/Saved/game.db "select * from characters,account where account.online = 1 and account.user = characters.playerId;"'
+		stdoutdata = subprocess.getoutput(cmd)
+		if stdoutdata:
+			outstr = "```Online Players\n"
+			for line in stdoutdata.split('\n'):
+				username = line.split(',')[2]
+				outstr += "   %s\n" % username
+			outstr += "```"
+			await client.send_message(message.channel, outstr)
+		else:
+			await client.send_message(message.channel, "Currently no player online.")
 
 	else: # send into game
 		def contain_zh(word):
