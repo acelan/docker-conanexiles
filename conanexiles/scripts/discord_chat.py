@@ -176,6 +176,18 @@ async def on_message(message):
 		await asyncio.sleep(5)
 		subprocess.call(['supervisorctl', 'restart', 'conanexilesChat'])
 		sys.exit(0)
+	elif message.content.startswith('!search'):
+		token = message.content[8:]
+		cmd = 'sqlite3 -csv -header /conanexiles/ConanSandbox/Saved/game.db "select quote(g.name) as GUILD, quote(c.char_name) as NAME, case c.rank WHEN \'3\' then \'Owner\' WHEN \'2\' then \'Leader\' WHEN \'1\' then \'Officer\' WHEN \'0\' then \'Peon\' ELSE c.rank END RANK, c.level as LEVEL, datetime(c.lastTimeOnline, \'unixepoch\') as LASTONLINE from characters as c left outer join guilds as g on g.guildid = c.guild left outer join actor_position as ap on ap.id = c.id order by g.name, c.rank desc, c.level desc, c.char_name;" | grep %s' % token
+		stdoutdata = subprocess.getoutput(cmd)
+		if not stdoutdata:
+			return
+		dbstr = stdoutdata.split("\n")
+		outstr = "```GUILD,NAME,RANK,LEVEL,LASTONLINE\n"
+		for line in dbstr:
+			outstr += line + "\n"
+		outstr += "```"
+		await client.send_message(message.channel, outstr)
 
 	else: # send into game
 		def contain_zh(word):
