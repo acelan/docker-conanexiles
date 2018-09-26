@@ -62,6 +62,9 @@ async def read_game_chat():
 				except:
 					print("Join request Error: %s - %s" % (line, query_dw_user_id))
 					yield "Join succeeded: Player %s joined the game." % query_Name
+			elif "BattlEyeLogging:" in line and "disconnected" in line:
+				name = line.split(']')[2].split(' ')[6]
+				yield "Player disconnected: %s" % name
 			elif "Allocator Stats for binned2:" in line:
 				subprocess.call(['/usr/bin/discord_broadcast', '"Server crash, restarting now..."'])
 				subprocess.call(['supervisorctl', 'restart', 'conanexilesServer'])
