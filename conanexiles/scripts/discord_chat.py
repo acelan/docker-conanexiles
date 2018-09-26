@@ -151,6 +151,31 @@ async def on_message(message):
 			await client.send_message(message.channel, outstr)
 		else:
 			await client.send_message(message.channel, "Currently no player online.")
+	elif message.content.startswith('!restart'):
+		stdoutdata = subprocess.getoutput("tac /conanexiles/ConanSandbox/Saved/Logs/ConanSandbox.log | grep -m 1 'LogServerStats:'")
+		stdoutdata = urllib.parse.unquote(stdoutdata)
+		if not stdoutdata:
+			subprocess.call(['/usr/bin/discord_broadcast', 'I can\'t get the server uptime, and can\'t do it now.'])
+			return
+
+		pattern = re.compile(r"players=(\d+)&\S+&uptime=(\d+)&memory=\d+:\d+:\d+:(\d+)&cpu_time=(\d+\.\d*)")
+		data = pattern.match(stdoutdata.split('report')[1].split('?')[1])
+		seconds=int(data[2])
+		datetime.timedelta(seconds)
+		if seconds < 24*60*60:
+			subprocess.call(['/usr/bin/discord_broadcast', 'Server uptime is not more than 1 day, so can\'t do it.'])
+			return
+
+		cmd = 'sqlite3 -csv /conanexiles/ConanSandbox/Saved/game.db "select count(*) from characters,account where account.online = 1 and account.user = characters.playerId;"'
+		stdoutdata = subprocess.getoutput(cmd)
+		if stdoutdata != '0':
+			subprocess.call(['/usr/bin/discord_broadcast', 'I can\'t do that, there are still %s players in the game.' % stdoutdata])
+			return
+		subprocess.call(['/usr/bin/discord_broadcast', 'Roger that, server is restarting...'])
+		subprocess.call(['supervisorctl', 'restart', 'conanexilesServer'])
+		await asyncio.sleep(5)
+		subprocess.call(['supervisorctl', 'restart', 'conanexilesChat'])
+		sys.exit(0)
 
 	else: # send into game
 		def contain_zh(word):
