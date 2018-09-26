@@ -68,6 +68,7 @@ async def read_game_chat():
 			elif "Allocator Stats for binned2:" in line:
 				subprocess.call(['/usr/bin/discord_broadcast', '"Server crash, restarting now..."'])
 				subprocess.call(['supervisorctl', 'restart', 'conanexilesServer'])
+				await asyncio.sleep(5)
 				subprocess.call(['supervisorctl', 'restart', 'conanexilesChat'])
 				sys.exit(0)
 
