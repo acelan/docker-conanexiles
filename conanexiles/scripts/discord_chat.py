@@ -81,7 +81,10 @@ async def read_game_chat():
 		print("From game: " + line)
 		if line.split(':')[1].startswith(' !'):
 			continue
-		await client.send_message(channel, line)
+		try:
+			await client.send_message(channel, line)
+		except:
+			print("Fail to send message to discord: %s" % line)
 		await asyncio.sleep(1)
 
 @client.event
