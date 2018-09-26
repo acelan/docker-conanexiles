@@ -14,6 +14,7 @@ import time
 import subprocess
 import urllib.parse
 import datetime
+from urllib import parse
 
 valve.rcon.RCONMessage.ENCODING = "utf-8"
 
@@ -45,26 +46,22 @@ async def read_game_chat():
 				chatstr = re.sub(r' said', '', re.sub(r'^.*Character ', '', line))
 				yield chatstr
 			elif "Join request:" in line:
-				pattern = re.compile(r"dw_user_id=(\S+)")
+				url = 'http://example.com/?ccc=123&'+'&'.join('/'.join(line.split('/')[1:]).split('?'))
+				query_Name = parse.parse_qs(parse.urlparse(url).query)['Name'][0]
+				query_dw_user_id = parse.parse_qs(parse.urlparse(url).query)['dw_user_id'][0]
+				#print("Name= %s, dw_user_id= %s" % (query_Name,query_dw_user_id))
+
+				cmd = 'sqlite3 -csv /conanexiles/ConanSandbox/Saved/game.db "select * from characters where playerId=%s;"' % query_dw_user_id
+				stdoutdata = subprocess.getoutput(cmd)
 				try:
-					joinstr = ""
-					if "bIsFromInvite" in line:
-						joinstr = pattern.match(line.split('?')[6])[1]
-					else:
-						joinstr = pattern.match(line.split('?')[5])[1]
-					cmd = 'sqlite3 -csv /conanexiles/ConanSandbox/Saved/game.db "select * from characters where playerId=%s;"' % joinstr
-					stdoutdata = subprocess.getoutput(cmd)
-					try:
-						username = stdoutdata.split(',')[2]
-						yield "Join succeeded: Player %s joined the game." % username
-					except IndexError:
-						print("Join request Error: %s - %s" % (line, stdoutdata))
-					except:
-						print("Join request Error: %s - %s" % (line, stdoutdata))
+					username = stdoutdata.split(',')[2]
+					yield "Join succeeded: Player %s joined the game." % username
 				except IndexError:
-					print("Join request Error: %s" % line)
+					print("Join request Error: %s - %s" % (line, query_dw_user_id))
+					yield "Join succeeded: Player %s joined the game." % query_Name
 				except:
-					print("Join request Error: %s" % line)
+					print("Join request Error: %s - %s" % (line, query_dw_user_id))
+					yield "Join succeeded: Player %s joined the game." % query_Name
 			elif "Allocator Stats for binned2:" in line:
 				subprocess.call(['/usr/bin/discord_broadcast', '"Server crash, restarting now..."'])
 				subprocess.call(['supervisorctl', 'restart', 'conanexilesServer'])
