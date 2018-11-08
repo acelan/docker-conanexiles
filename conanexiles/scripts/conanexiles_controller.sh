@@ -41,7 +41,7 @@ function start_server() {
         return
     else
         notifier_info "Cleaning up game.db."
-        sqlite3 /conanexiles/ConanSandbox/Saved/game.db "VACUUM;REINDEX;ANALYZE;pragma integrity_check"
+	sqlite3 /conanexiles/ConanSandbox/Saved/game.db < /sql/reboot.sql;
         supervisorctl status conanexilesServer | grep RUNNING > /dev/null
         [[ $? != 0 ]] && supervisorctl start conanexilesServer
 	# restart chat bot to read the new log

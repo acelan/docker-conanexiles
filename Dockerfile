@@ -40,6 +40,8 @@ ADD conanexiles/lib/notifier.sh /var/lib/conanexiles/notifier.sh
 
 ADD conanexiles/rcon/rconcli.py /usr/bin/rconcli
 
+ADD conanexiles/sql /sql
+
 RUN chmod +x /usr/bin/steamcmd_setup /usr/bin/conanexiles_controller /entrypoint.sh /usr/bin/redi.sh /usr/bin/rconcli /usr/bin/discord_broadcast /usr/bin/discord_chat
 RUN python3 -m pip install -U discord.py
 
