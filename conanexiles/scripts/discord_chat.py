@@ -187,6 +187,18 @@ async def on_message(message):
 			outstr += line + "\n"
 		outstr += "```"
 		await client.send_message(message.channel, outstr)
+	elif message.content.startswith('!building'):
+		token = message.content[8:]
+		cmd = 'sqlite3 -csv -header /conanexiles/ConanSandbox/Saved/game.db "select * from building_pieces_members limit 5;"'
+		stdoutdata = subprocess.getoutput(cmd)
+		if not stdoutdata:
+			return
+		dbstr = stdoutdata.split("\n")
+		outstr = "```"
+		for line in dbstr:
+			outstr += line + "\n"
+		outstr += "```"
+		await client.send_message(message.channel, outstr)
 
 	else: # send into game
 		def contain_zh(word):
