@@ -193,7 +193,7 @@ start_master_loop() {
                     echo "Z:/conanexiles/ConanSandbox/Mods/$i/$filename" >> /conanexiles/steamapps/workshop/content/440900/modlist.txt;
                 done
             fi
-            bytes=`rsync -avr --stats /conanexiles/steamapps/workshop/content/440900/* /conanexiles/ConanSandbox/Mods | grep "Total transferred file size:" | sed 's/Total transferred file size: \(.*\) bytes/\1/'`
+            bytes=`rsync -avr --stats --delete /conanexiles/steamapps/workshop/content/440900/* /conanexiles/ConanSandbox/Mods | grep "Total transferred file size:" | sed 's/Total transferred file size: \(.*\) bytes/\1/'`
             if [[ $bytes != "0" ]];then
                 notifier_info "Mods have been updated: $bytes bytes"
                 if [[ ${CONANEXILES_Game_DiscordPlugin_Broadcast_Enabled} == 1 ]]; then
