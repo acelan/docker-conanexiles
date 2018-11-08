@@ -127,8 +127,10 @@ function do_update() {
     if [[ $1 == 1 ]];then
         update_server
     else
-        start_shutdown_timer 10
-        stop_server
+        if [[ `check_server_running` == 0 ]];then
+            start_shutdown_timer 10
+            stop_server
+        fi
         # Give other instances time to shutdown
         sleep 30
         backup_server
