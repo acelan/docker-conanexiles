@@ -172,9 +172,8 @@ async def on_message(message):
 			subprocess.call(['/usr/bin/discord_broadcast', 'I can\'t do that, there are still %s players in the game.' % stdoutdata])
 			return
 		subprocess.call(['/usr/bin/discord_broadcast', 'Roger that, server is restarting...'])
-		subprocess.call(['supervisorctl', 'restart', 'conanexilesServer'])
-		await asyncio.sleep(5)
-		subprocess.call(['supervisorctl', 'restart', 'conanexilesChat'])
+		subprocess.call(['supervisorctl', 'stop', 'conanexilesServer'])
+		subprocess.call(['supervisorctl', 'restart', 'conanexilesController'])
 		sys.exit(0)
 	elif message.content.startswith('!search'):
 		token = message.content[8:]
