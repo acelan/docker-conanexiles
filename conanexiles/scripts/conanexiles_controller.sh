@@ -46,6 +46,7 @@ function start_server() {
         [[ $? != 0 ]] && supervisorctl start conanexilesServer
 	# restart chat bot to read the new log
         if [[ ${CONANEXILES_Game_DiscordPlugin_Chat_Enabled} == 1 ]]; then
+            sleep 60
             supervisorctl restart conanexilesChat
         fi
         if [[ ${CONANEXILES_Game_DiscordPlugin_Broadcast_Enabled} == 1 ]]; then
