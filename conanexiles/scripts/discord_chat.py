@@ -66,10 +66,10 @@ async def read_game_chat():
 				name = line.split(']')[2].split(' ')[6]
 				yield "Player disconnected: %s" % name
 			elif "Allocator Stats for binned2:" in line:
-				subprocess.call(['/usr/bin/discord_broadcast', '"Server crash, restarting now..."'])
-				subprocess.call(['supervisorctl', 'restart', 'conanexilesServer'])
+				subprocess.call(['/usr/bin/discord_broadcast', '"Server crashes, waiting server to restart..."'])
 				await asyncio.sleep(5)
-				subprocess.call(['supervisorctl', 'restart', 'conanexilesChat'])
+				subprocess.call(['supervisorctl', 'stop', 'conanexilesServer'])
+				subprocess.call(['supervisorctl', 'restart', 'conanexilesController'])
 				sys.exit(0)
 
 	await client.wait_until_ready()
