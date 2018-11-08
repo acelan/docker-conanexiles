@@ -199,6 +199,18 @@ async def on_message(message):
 			outstr += line + "\n"
 		outstr += "```"
 		await client.send_message(message.channel, outstr)
+	elif message.content.startswith('!thrall'):
+		token = message.content[8:]
+		cmd = 'sqlite3 -csv -header /conanexiles/ConanSandbox/Saved/game.db "select player_guild_name as Owner, count(*) as Number from ThrallInfo group by player_guild_name order by Number DESC limit 5;"'
+		stdoutdata = subprocess.getoutput(cmd)
+		if not stdoutdata:
+			return
+		dbstr = stdoutdata.split("\n")
+		outstr = "```"
+		for line in dbstr:
+			outstr += line + "\n"
+		outstr += "```"
+		await client.send_message(message.channel, outstr)
 
 	else: # send into game
 		def contain_zh(word):
