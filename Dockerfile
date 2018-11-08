@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM debian:sid
 
 MAINTAINER AceLan Kao
 
@@ -12,7 +12,7 @@ CONANEXILES_Game_RconPlugin_RconMaxKarma=60
 RUN dpkg --add-architecture i386 && \
     apt-get update && \
     apt-get install -y software-properties-common python3-software-properties wget unzip xvfb supervisor crudini tzdata rsync python3-pip python3-feedparser sqlite3 locales && \
-    apt-get install -y --install-recommends wine64 winbind && \
+    apt-get install -y --install-recommends wine64-development winbind && \
     pip3 install python-valve && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     mkdir -p /etc/supervisor/conf.d
